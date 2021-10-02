@@ -24,7 +24,10 @@ import java.util.NoSuchElementException;
  * code must include the vertices, adjacent, distance, closest, lat, and lon
  * methods. You'll also need to include instance variables and methods for
  * modifying the graph (e.g. addNode and addEdge).
+ *
+ * @author Kevin Lowe, Antares Chen, Kevin Lin
  */
+
 public class GraphDB {
     /**
      * This constructor creates and starts an XML parser, cleans the nodes, and prepares the
@@ -184,16 +187,18 @@ public class GraphDB {
         List<Long> visited = new ArrayList<>();
         PriorityQueue<Long> fringe = new PriorityQueue<>((Object o1, Object o2) -> {
             double first = weightMap.get(o1) + getHeuristic((long) o1, stop);
-            double second = weightMap.get(o2) + getHeuristic((long) o1, stop);
+            double second = weightMap.get(o2) + getHeuristic((long) o2, stop);
 
             double i = first - second;
+            int val = 0;
             if (i < 0) {
-                return -1;
+                val = -1;
             } else if (i > 0) {
-                return 1;
+                val =  1;
             } else {
-                return 0;
+                val = 0;
             }
+            return val;
         });
         if (getEdges(start).isEmpty()) {
             return null;
@@ -243,7 +248,7 @@ public class GraphDB {
 
     public double getHeuristic(long v1, long v2) {
         double dist = distance(v1, v2);
-        return dist * 1.8;
+        return dist*0.8;
     }
 
 
@@ -473,6 +478,30 @@ public class GraphDB {
         double phi = Math.toRadians(lat);
         double con = Math.atan(Math.tan(phi) / Math.cos(dlon));
         return K0 * (con - Math.toRadians(ROOT_LAT));
+    }
+
+    /**
+     * In linear time, collect all the names of OSM locations that prefix-match the query string.
+     *
+     * @param prefix Prefix string to be searched for. Could be any case, with our without
+     *               punctuation.
+     * @return A <code>List</code> of the full names of locations whose cleaned name matches the
+     * cleaned <code>prefix</code>.
+     */
+    public List<String> getLocationsByPrefix(String prefix) {
+        return Collections.emptyList();
+    }
+
+    /**
+     * Collect all locations that match a cleaned <code>locationName</code>, and return
+     * information about each node that matches.
+     *
+     * @param locationName A full name of a location searched for.
+     * @return A <code>List</code> of <code>LocationParams</code> whose cleaned name matches the
+     * cleaned <code>locationName</code>
+     */
+    public List<LocationParams> getLocations(String locationName) {
+        return Collections.emptyList();
     }
 
     /**
